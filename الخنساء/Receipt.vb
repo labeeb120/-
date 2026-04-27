@@ -9,6 +9,7 @@ Public Class Receipt
         End If
 
         Try
+            ' استخدام نفس جدول payment لسندات الصرف مع تمييزها في الملاحظات
             Dim query As String = "INSERT INTO payment (payer_Name, paid_Amount, PaymentMethod, PaymentDate, Notes) VALUES (?, ?, ?, ?, ?)"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox2.Text)) ' يصرف إلى

@@ -27,13 +27,13 @@ Public Class studnt
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
 
-            ' معالجة رقم الهاتف بحذر لتجنب أخطاء التحويل
+            ' معالجة رقم الهاتف
             Dim phoneVal As Object = DBNull.Value
             If IsNumeric(TextBox3.Text) Then
                 Try
                     phoneVal = Convert.ToInt64(TextBox3.Text)
                 Catch ex As OverflowException
-                    phoneVal = 0 ' أو معالجة أخرى حسب الرغبة
+                    phoneVal = 0
                 End Try
             End If
             parameters.Add(New OleDbParameter("?", phoneVal))

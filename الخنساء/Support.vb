@@ -27,6 +27,7 @@ Public Class Support
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
 
+            ' معالجة رقم الهاتف
             Dim phoneVal As Object = DBNull.Value
             If IsNumeric(TextBox3.Text) Then
                 Try
