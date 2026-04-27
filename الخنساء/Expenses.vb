@@ -1,4 +1,4 @@
-Imports System.Data.OleDb
+﻿Imports System.Data.OleDb
 
 Public Class Expenses
     Private Sub Expenses_Load(sender As Object, e As EventArgs) Handles MyBase.Load

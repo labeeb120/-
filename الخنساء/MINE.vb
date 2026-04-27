@@ -1,4 +1,4 @@
-Public Class MINE
+﻿Public Class MINE
     ' فتح واجهة الطلاب من القائمة
     Private Sub واجههالطلابToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles واجههالطلابToolStripMenuItem.Click
         studnt.Show()

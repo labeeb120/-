@@ -1,4 +1,4 @@
-Public Class ADD
+﻿Public Class ADD
     Private Sub form_ADD_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
