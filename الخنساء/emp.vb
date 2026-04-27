@@ -1,6 +1,6 @@
 Imports System.Data.OleDb
 
-﻿Public Class emp
+Public Class emp
     Private Sub emp_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadData()
     End Sub
@@ -132,14 +132,14 @@ Imports System.Data.OleDb
     Private Sub DataGridView1_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView1.SelectionChanged
         If DataGridView1.SelectedRows.Count > 0 Then
             Dim row As DataGridViewRow = DataGridView1.SelectedRows(0)
-            TextBox1.Text = row.Cells("Employee_Name").Value.ToString()
-            TextBox2.Text = row.Cells("emp_id").Value.ToString()
-            ComboBox3.Text = row.Cells("Gendar").Value.ToString()
-            TextBox7.Text = row.Cells("contract_fees").Value.ToString()
-            TextBox5.Text = row.Cells("absence_days").Value.ToString()
-            TextBox10.Text = row.Cells("Hours_count").Value.ToString()
-            ComboBox4.Text = row.Cells("contract_Type").Value.ToString()
-            TextBox4.Text = row.Cells("Final_Amount").Value.ToString()
+            TextBox1.Text = If(IsDBNull(row.Cells("Employee_Name").Value), "", row.Cells("Employee_Name").Value.ToString())
+            TextBox2.Text = If(IsDBNull(row.Cells("emp_id").Value), "", row.Cells("emp_id").Value.ToString())
+            ComboBox3.Text = If(IsDBNull(row.Cells("Gendar").Value), "", row.Cells("Gendar").Value.ToString())
+            TextBox7.Text = If(IsDBNull(row.Cells("contract_fees").Value), "0", row.Cells("contract_fees").Value.ToString())
+            TextBox5.Text = If(IsDBNull(row.Cells("absence_days").Value), "0", row.Cells("absence_days").Value.ToString())
+            TextBox10.Text = If(IsDBNull(row.Cells("Hours_count").Value), "0", row.Cells("Hours_count").Value.ToString())
+            ComboBox4.Text = If(IsDBNull(row.Cells("contract_Type").Value), "", row.Cells("contract_Type").Value.ToString())
+            TextBox4.Text = If(IsDBNull(row.Cells("Final_Amount").Value), "0", row.Cells("Final_Amount").Value.ToString())
         End If
     End Sub
 End Class

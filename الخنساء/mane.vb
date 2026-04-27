@@ -1,6 +1,6 @@
 Imports System.Data.OleDb
 
-﻿Public Class mane
+Public Class mane
     Private Sub mane_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadData()
     End Sub
@@ -24,14 +24,22 @@ Imports System.Data.OleDb
         End If
 
         Try
-            Dim query As String = "INSERT INTO Revenue (Revenue_Name, Revenue_phone, Amount, RevenueDate, Revenue_Name_ID) VALUES (?, ?, ?, ?, ?)"
-            ' ملاحظة: Revenue_Name_ID قد يقصد به رقم الدافع (TextBox2) أو نوع الإيراد
+            Dim query As String = "INSERT INTO Revenue ([Revenue Name], [Revenue phone], Amount, RevenueDate) VALUES (?, ?, ?, ?)"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text)) ' اسم الدافع
-            parameters.Add(New OleDbParameter("?", TextBox3.Text)) ' الهاتف
+
+            Dim phoneVal As Object = DBNull.Value
+            If IsNumeric(TextBox3.Text) Then
+                Try
+                    phoneVal = Convert.ToInt64(TextBox3.Text)
+                Catch ex As OverflowException
+                    phoneVal = 0
+                End Try
+            End If
+            parameters.Add(New OleDbParameter("?", phoneVal))
+
             parameters.Add(New OleDbParameter("?", Convert.ToDecimal(TextBox4.Text))) ' المبلغ
             parameters.Add(New OleDbParameter("?", DateTimePicker1.Value.Date)) ' تاريخ الدفع
-            parameters.Add(New OleDbParameter("?", TextBox2.Text)) ' رقم الدافع
 
             DataAccessHelper.ExecuteNonQuery(query, parameters)
             MsgBox("تم الحفظ بنجاح")
@@ -44,7 +52,6 @@ Imports System.Data.OleDb
 
     ' زر تعديل
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ' يتطلب تحديد سجل من DataGridView أولاً
         If DataGridView2.SelectedRows.Count = 0 Then
             MsgBox("يرجى اختيار سجل من الجدول للتعديل")
             Return
@@ -52,13 +59,22 @@ Imports System.Data.OleDb
 
         Try
             Dim id As Integer = DataGridView2.SelectedRows(0).Cells("RevenueID").Value
-            Dim query As String = "UPDATE Revenue SET Revenue_Name = ?, Revenue_phone = ?, Amount = ?, RevenueDate = ?, Revenue_Name_ID = ? WHERE RevenueID = ?"
+            Dim query As String = "UPDATE Revenue SET [Revenue Name] = ?, [Revenue phone] = ?, Amount = ?, RevenueDate = ? WHERE RevenueID = ?"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
-            parameters.Add(New OleDbParameter("?", TextBox3.Text))
+
+            Dim phoneVal As Object = DBNull.Value
+            If IsNumeric(TextBox3.Text) Then
+                Try
+                    phoneVal = Convert.ToInt64(TextBox3.Text)
+                Catch ex As OverflowException
+                    phoneVal = 0
+                End Try
+            End If
+            parameters.Add(New OleDbParameter("?", phoneVal))
+
             parameters.Add(New OleDbParameter("?", Convert.ToDecimal(TextBox4.Text)))
             parameters.Add(New OleDbParameter("?", DateTimePicker1.Value.Date))
-            parameters.Add(New OleDbParameter("?", TextBox2.Text))
             parameters.Add(New OleDbParameter("?", id))
 
             DataAccessHelper.ExecuteNonQuery(query, parameters)
@@ -95,7 +111,7 @@ Imports System.Data.OleDb
     ' زر بحث
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
         Try
-            Dim query As String = "SELECT * FROM Revenue WHERE Revenue_Name LIKE ?"
+            Dim query As String = "SELECT * FROM Revenue WHERE [Revenue Name] LIKE ?"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", "%" & TextBox1.Text & "%"))
 
@@ -124,23 +140,14 @@ Imports System.Data.OleDb
         TextBox8.Clear()
     End Sub
 
-    Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
-
-    End Sub
-
-    Private Sub DateTimePicker1_ValueChanged(sender As Object, e As EventArgs) Handles DateTimePicker1.ValueChanged
-
-    End Sub
-
     ' عند اختيار سجل من الجدول
     Private Sub DataGridView2_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView2.SelectionChanged
         If DataGridView2.SelectedRows.Count > 0 Then
             Dim row As DataGridViewRow = DataGridView2.SelectedRows(0)
-            TextBox1.Text = row.Cells("Revenue_Name").Value.ToString()
-            TextBox3.Text = row.Cells("Revenue_phone").Value.ToString()
-            TextBox4.Text = row.Cells("Amount").Value.ToString()
+            TextBox1.Text = If(IsDBNull(row.Cells("Revenue Name").Value), "", row.Cells("Revenue Name").Value.ToString())
+            TextBox3.Text = If(IsDBNull(row.Cells("Revenue phone").Value), "", row.Cells("Revenue phone").Value.ToString())
+            TextBox4.Text = If(IsDBNull(row.Cells("Amount").Value), "", row.Cells("Amount").Value.ToString())
             DateTimePicker1.Value = If(IsDBNull(row.Cells("RevenueDate").Value), DateTime.Now, row.Cells("RevenueDate").Value)
-            ' TextBox2.Text = row.Cells("Revenue_Name_ID").Value.ToString() ' إذا كان موجوداً
         End If
     End Sub
 End Class

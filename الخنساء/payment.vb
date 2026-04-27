@@ -1,6 +1,6 @@
 Imports System.Data.OleDb
 
-﻿Public Class payment
+Public Class payment
     ' زر حفظ
     Private Sub حفظToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles حفظToolStripMenuItem.Click
         If String.IsNullOrWhiteSpace(TextBox2.Text) Or String.IsNullOrWhiteSpace(TextBox3.Text) Then
@@ -12,7 +12,7 @@ Imports System.Data.OleDb
             Dim query As String = "INSERT INTO payment (payer_Name, paid_Amount, PaymentMethod, PaymentDate, Notes) VALUES (?, ?, ?, ?, ?)"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox2.Text)) ' اسم الدافعة
-            parameters.Add(New OleDbParameter("?", TextBox3.Text)) ' المبلغ
+            parameters.Add(New OleDbParameter("?", Convert.ToDecimal(TextBox3.Text))) ' المبلغ
             parameters.Add(New OleDbParameter("?", ComboBox4.Text)) ' مقابل ماذا
             parameters.Add(New OleDbParameter("?", DateTimePicker2.Value.Date))
             parameters.Add(New OleDbParameter("?", "سند قبض"))
@@ -65,7 +65,4 @@ Imports System.Data.OleDb
         ComboBox4.SelectedIndex = -1
     End Sub
 
-    Private Sub TextBox4_TextChanged(sender As Object, e As EventArgs)
-
-    End Sub
 End Class

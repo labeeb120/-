@@ -1,6 +1,6 @@
 Imports System.Data.OleDb
 
-﻿Public Class Support
+Public Class Support
     Private Sub Support_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadData()
     End Sub
@@ -26,7 +26,17 @@ Imports System.Data.OleDb
             Dim query As String = "INSERT INTO Support (SupporterName, phone, email, adress, Amount, SupportDate, PaymentMethod, [Beneficiary Entity]) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
-            parameters.Add(New OleDbParameter("?", TextBox3.Text))
+
+            Dim phoneVal As Object = DBNull.Value
+            If IsNumeric(TextBox3.Text) Then
+                Try
+                    phoneVal = Convert.ToInt64(TextBox3.Text)
+                Catch ex As OverflowException
+                    phoneVal = 0
+                End Try
+            End If
+            parameters.Add(New OleDbParameter("?", phoneVal))
+
             parameters.Add(New OleDbParameter("?", TextBox5.Text))
             parameters.Add(New OleDbParameter("?", TextBox7.Text))
             parameters.Add(New OleDbParameter("?", Convert.ToDecimal(If(String.IsNullOrEmpty(TextBox4.Text), "0", TextBox4.Text))))
@@ -55,7 +65,17 @@ Imports System.Data.OleDb
             Dim query As String = "UPDATE Support SET SupporterName = ?, phone = ?, email = ?, adress = ?, Amount = ?, SupportDate = ?, PaymentMethod = ?, [Beneficiary Entity] = ? WHERE SupporterID = ?"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
-            parameters.Add(New OleDbParameter("?", TextBox3.Text))
+
+            Dim phoneVal As Object = DBNull.Value
+            If IsNumeric(TextBox3.Text) Then
+                Try
+                    phoneVal = Convert.ToInt64(TextBox3.Text)
+                Catch ex As OverflowException
+                    phoneVal = 0
+                End Try
+            End If
+            parameters.Add(New OleDbParameter("?", phoneVal))
+
             parameters.Add(New OleDbParameter("?", TextBox5.Text))
             parameters.Add(New OleDbParameter("?", TextBox7.Text))
             parameters.Add(New OleDbParameter("?", Convert.ToDecimal(If(String.IsNullOrEmpty(TextBox4.Text), "0", TextBox4.Text))))
@@ -132,15 +152,15 @@ Imports System.Data.OleDb
     Private Sub DataGridView2_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView2.SelectionChanged
         If DataGridView2.SelectedRows.Count > 0 Then
             Dim row As DataGridViewRow = DataGridView2.SelectedRows(0)
-            TextBox1.Text = row.Cells("SupporterName").Value.ToString()
-            TextBox2.Text = row.Cells("SupporterID").Value.ToString()
-            TextBox3.Text = row.Cells("phone").Value.ToString()
-            TextBox5.Text = row.Cells("email").Value.ToString()
-            TextBox7.Text = row.Cells("adress").Value.ToString()
-            TextBox4.Text = row.Cells("Amount").Value.ToString()
+            TextBox1.Text = If(IsDBNull(row.Cells("SupporterName").Value), "", row.Cells("SupporterName").Value.ToString())
+            TextBox2.Text = If(IsDBNull(row.Cells("SupporterID").Value), "", row.Cells("SupporterID").Value.ToString())
+            TextBox3.Text = If(IsDBNull(row.Cells("phone").Value), "", row.Cells("phone").Value.ToString())
+            TextBox5.Text = If(IsDBNull(row.Cells("email").Value), "", row.Cells("email").Value.ToString())
+            TextBox7.Text = If(IsDBNull(row.Cells("adress").Value), "", row.Cells("adress").Value.ToString())
+            TextBox4.Text = If(IsDBNull(row.Cells("Amount").Value), "0", row.Cells("Amount").Value.ToString())
             DateTimePicker1.Value = If(IsDBNull(row.Cells("SupportDate").Value), DateTime.Now, row.Cells("SupportDate").Value)
-            ComboBox1.Text = row.Cells("PaymentMethod").Value.ToString()
-            ComboBox2.Text = row.Cells("Beneficiary_Entity").Value.ToString()
+            ComboBox1.Text = If(IsDBNull(row.Cells("PaymentMethod").Value), "", row.Cells("PaymentMethod").Value.ToString())
+            ComboBox2.Text = If(IsDBNull(row.Cells("Beneficiary Entity").Value), "", row.Cells("Beneficiary Entity").Value.ToString())
         End If
     End Sub
 End Class

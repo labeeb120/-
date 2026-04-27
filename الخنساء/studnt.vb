@@ -1,6 +1,6 @@
 Imports System.Data.OleDb
 
-﻿Public Class studnt
+Public Class studnt
     Private Sub studnt_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadData()
     End Sub
@@ -23,10 +23,21 @@ Imports System.Data.OleDb
         End If
 
         Try
-            Dim query As String = "INSERT INTO Students (StudentName, Phone, Notes, Student_Status, EnrollmentDate) VALUES (?, ?, ?, ?, ?)"
+            Dim query As String = "INSERT INTO Students (StudentName, Phone, Notes, [Student Status], EnrollmentDate) VALUES (?, ?, ?, ?, ?)"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
-            parameters.Add(New OleDbParameter("?", TextBox3.Text))
+
+            ' معالجة رقم الهاتف بحذر لتجنب أخطاء التحويل
+            Dim phoneVal As Object = DBNull.Value
+            If IsNumeric(TextBox3.Text) Then
+                Try
+                    phoneVal = Convert.ToInt64(TextBox3.Text)
+                Catch ex As OverflowException
+                    phoneVal = 0 ' أو معالجة أخرى حسب الرغبة
+                End Try
+            End If
+            parameters.Add(New OleDbParameter("?", phoneVal))
+
             parameters.Add(New OleDbParameter("?", TextBox8.Text))
             parameters.Add(New OleDbParameter("?", ComboBox4.Text))
             parameters.Add(New OleDbParameter("?", DateTimePicker2.Value.Date))
@@ -49,10 +60,20 @@ Imports System.Data.OleDb
 
         Try
             Dim id As Integer = DataGridView2.SelectedRows(0).Cells("StudentID").Value
-            Dim query As String = "UPDATE Students SET StudentName = ?, Phone = ?, Notes = ?, Student_Status = ?, EnrollmentDate = ? WHERE StudentID = ?"
+            Dim query As String = "UPDATE Students SET StudentName = ?, Phone = ?, Notes = ?, [Student Status] = ?, EnrollmentDate = ? WHERE StudentID = ?"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
-            parameters.Add(New OleDbParameter("?", TextBox3.Text))
+
+            Dim phoneVal As Object = DBNull.Value
+            If IsNumeric(TextBox3.Text) Then
+                Try
+                    phoneVal = Convert.ToInt64(TextBox3.Text)
+                Catch ex As OverflowException
+                    phoneVal = 0
+                End Try
+            End If
+            parameters.Add(New OleDbParameter("?", phoneVal))
+
             parameters.Add(New OleDbParameter("?", TextBox8.Text))
             parameters.Add(New OleDbParameter("?", ComboBox4.Text))
             parameters.Add(New OleDbParameter("?", DateTimePicker2.Value.Date))
@@ -131,12 +152,11 @@ Imports System.Data.OleDb
     Private Sub DataGridView2_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView2.SelectionChanged
         If DataGridView2.SelectedRows.Count > 0 Then
             Dim row As DataGridViewRow = DataGridView2.SelectedRows(0)
-            TextBox1.Text = row.Cells("StudentName").Value.ToString()
-            TextBox3.Text = row.Cells("Phone").Value.ToString()
-            TextBox8.Text = row.Cells("Notes").Value.ToString()
-            ComboBox4.Text = row.Cells("Student_Status").Value.ToString()
-            DateTimePicker2.Value = If(IsDBNull(row.Cells("EnrollmentDate").Value), DateTime.Now, row.Cells("EnrollmentDate").Value)
-            TextBox2.Text = row.Cells("StudentID").Value.ToString()
+            TextBox1.Text = If(IsDBNull(row.Cells("StudentName").Value), "", row.Cells("StudentName").Value.ToString())
+            TextBox3.Text = If(IsDBNull(row.Cells("Phone").Value), "", row.Cells("Phone").Value.ToString())
+            TextBox8.Text = If(IsDBNull(row.Cells("Notes").Value), "", row.Cells("Notes").Value.ToString())
+            ComboBox4.Text = If(IsDBNull(row.Cells("Student Status").Value), "", row.Cells("Student Status").Value.ToString())
+            TextBox2.Text = If(IsDBNull(row.Cells("StudentID").Value), "", row.Cells("StudentID").Value.ToString())
         End If
     End Sub
 End Class

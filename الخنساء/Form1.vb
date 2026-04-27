@@ -1,4 +1,3 @@
-﻿
 Imports System.Data.OleDb
 
 Public Class Form1
@@ -19,9 +18,10 @@ Public Class Form1
             parameters.Add(New OleDbParameter("?", TextBox1.Text))
             parameters.Add(New OleDbParameter("?", TextBox2.Text))
 
-            Dim result As Integer = Convert.ToInt32(DataAccessHelper.ExecuteScalar(query, parameters))
+            Dim result As Object = DataAccessHelper.ExecuteScalar(query, parameters)
+            Dim count As Integer = If(result IsNot Nothing, Convert.ToInt32(result), 0)
 
-            If result > 0 Then
+            If count > 0 Then
                 MsgBox("تم تسجيل الدخول بنجاح", MsgBoxStyle.Information, "مرحباً")
                 MINE.Show()
                 Me.Hide()
@@ -45,15 +45,7 @@ Public Class Form1
 
     ' زر تغيير كلمة السر
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        ' يمكن إضافة واجهة لتغيير كلمة السر هنا لاحقاً
         MsgBox("هذه الخاصية ستتوفر قريباً", MsgBoxStyle.Information, "تغيير كلمة السر")
     End Sub
 
-    Private Sub PictureBox2_Click(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub PictureBox5_Click(sender As Object, e As EventArgs)
-
-    End Sub
 End Class

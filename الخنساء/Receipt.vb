@@ -1,6 +1,6 @@
 Imports System.Data.OleDb
 
-﻿Public Class Receipt
+Public Class Receipt
     ' زر حفظ
     Private Sub حفظToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles حفظToolStripMenuItem.Click
         If String.IsNullOrWhiteSpace(TextBox2.Text) Or String.IsNullOrWhiteSpace(TextBox3.Text) Then
@@ -9,11 +9,10 @@ Imports System.Data.OleDb
         End If
 
         Try
-            ' استخدام نفس جدول payment لسندات الصرف مع تمييزها في الملاحظات
             Dim query As String = "INSERT INTO payment (payer_Name, paid_Amount, PaymentMethod, PaymentDate, Notes) VALUES (?, ?, ?, ?, ?)"
             Dim parameters As New List(Of OleDbParameter)
             parameters.Add(New OleDbParameter("?", TextBox2.Text)) ' يصرف إلى
-            parameters.Add(New OleDbParameter("?", TextBox3.Text)) ' المبلغ
+            parameters.Add(New OleDbParameter("?", Convert.ToDecimal(TextBox3.Text))) ' المبلغ
             parameters.Add(New OleDbParameter("?", ComboBox4.Text)) ' مقابل ماذا
             parameters.Add(New OleDbParameter("?", DateTimePicker2.Value.Date))
             parameters.Add(New OleDbParameter("?", "سند صرف"))
@@ -67,11 +66,4 @@ Imports System.Data.OleDb
         ComboBox4.SelectedIndex = -1
     End Sub
 
-    Private Sub ملفToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ملفToolStripMenuItem.Click
-
-    End Sub
-
-    Private Sub ملفToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ملفToolStripMenuItem1.Click
-
-    End Sub
 End Class

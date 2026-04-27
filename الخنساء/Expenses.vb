@@ -1,6 +1,6 @@
 Imports System.Data.OleDb
 
-﻿Public Class Expenses
+Public Class Expenses
     Private Sub Expenses_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadData()
     End Sub
@@ -126,15 +126,12 @@ Imports System.Data.OleDb
     Private Sub DataGridView2_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView2.SelectionChanged
         If DataGridView2.SelectedRows.Count > 0 Then
             Dim row As DataGridViewRow = DataGridView2.SelectedRows(0)
-            TextBox1.Text = row.Cells("Expense_ID").Value.ToString()
-            TextBox5.Text = row.Cells("Amount").Value.ToString()
-            TextBox8.Text = row.Cells("notes").Value.ToString()
-            ComboBox4.Text = row.Cells("Expense_type").Value.ToString()
+            TextBox1.Text = If(IsDBNull(row.Cells("Expense_ID").Value), "", row.Cells("Expense_ID").Value.ToString())
+            TextBox5.Text = If(IsDBNull(row.Cells("Amount").Value), "0", row.Cells("Amount").Value.ToString())
+            TextBox8.Text = If(IsDBNull(row.Cells("notes").Value), "", row.Cells("notes").Value.ToString())
+            ComboBox4.Text = If(IsDBNull(row.Cells("Expense_type").Value), "", row.Cells("Expense_type").Value.ToString())
             DateTimePicker2.Value = If(IsDBNull(row.Cells("Expense_Date").Value), DateTime.Now, row.Cells("Expense_Date").Value)
         End If
     End Sub
 
-    Private Sub PictureBox1_Click(sender As Object, e As EventArgs)
-
-    End Sub
 End Class

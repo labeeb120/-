@@ -1,4 +1,4 @@
-﻿Public Class MINE
+Public Class MINE
     ' فتح واجهة الطلاب من القائمة
     Private Sub واجههالطلابToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles واجههالطلابToolStripMenuItem.Click
         studnt.Show()
@@ -35,15 +35,11 @@
     End Sub
 
     Private Sub قبضToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles قبضToolStripMenuItem.Click
-        ' يمكن توجيهه لواجهة السندات أو الدفع
-        mane.Show()
+        payment.Show()
     End Sub
 
     Private Sub صرفToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles صرفToolStripMenuItem.Click
-        Expenses.Show()
+        Receipt.Show()
     End Sub
 
-    Private Sub ملفToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ملفToolStripMenuItem.Click
-
-    End Sub
 End Class
