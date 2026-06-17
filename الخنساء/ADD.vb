@@ -3,12 +3,10 @@
 
     End Sub
 
+    ' زر الدخول للنظام
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Form1.Show()
-
+        Me.Hide()
     End Sub
 
-    Private Sub Label13_Click(sender As Object, e As EventArgs) Handles Label13.Click
-
-    End Sub
 End Class
